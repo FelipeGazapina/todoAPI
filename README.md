@@ -1,10 +1,14 @@
 ### ToDo API
+_______________________________________________________________________________________________________________________________________________
 Uma API para desenvolvimento de uma lista de afazeres de forma fácil e rápida
 
+
 ### Explicação
+_______________________________________________________________________________________________________________________________________________
 Esta API foi feita através de um desafio de conceitos básicos de Node.JS, feito pela escola RocketSeat
 
 ### Conteúdo
+_______________________________________________________________________________________________________________________________________________
 Essa aplicação será uma aplicação para gerenciar tarefas.
 É permitido a criação de um usuário com NAME e USERNAME, bem como fazer um CRUD de Todos, dentro de um Array de usuários:
 
@@ -17,12 +21,14 @@ Essa aplicação será uma aplicação para gerenciar tarefas.
 Tudo isso para cada usuário específico (o username será passado pelo Header)
 
 ### Requerimentos
+_______________________________________________________________________________________________________________________________________________
 
 * node instalado na máquina [NODE.JS](https://nodejs.org/en/download/)
 * express
 * uuid
 
 ### Comandos
+_______________________________________________________________________________________________________________________________________________
 
 ### POST /
 * BODY
