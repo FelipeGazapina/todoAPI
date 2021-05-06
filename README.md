@@ -80,9 +80,7 @@ Será criada uma TODO da seguinte forma:
  determinada pelo params.id da requisição
 
 ### DELETE /todos/:id
-
-### FIM
-
+_______________________________________________________________________________________________________________________________________________
 ### Contatos
 
 * [EMAIL](felipe@gazapina.com.br)
