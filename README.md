@@ -56,9 +56,9 @@ Será criada uma TODO da seguinte forma:
 
 ### Todas as próximas requisições Conferem se existe a TODO que esta sendo procurada
 
-/**
 * Esta roda recebe no body os dados a serem atualizados
-*/
+
+
 #PUT /todos/:id
 * BODY
     { 
@@ -66,20 +66,21 @@ Será criada uma TODO da seguinte forma:
 	    deadline: 'ANO-MES-DIA', 
     }
 
-/**
-* Esta rota Atualiza o Status da TODO, para true, 
-* determinada pelo params.id da requisição
-*/
-#PACTH/todos/:id/done
+ Esta rota Atualiza o Status da TODO, para true, 
+ determinada pelo params.id da requisição
 
-/**
-* Esta rota Deleta a TODO 
-* determinada pelo params.id da requisição
-*/
-#DELETE/todos/:id
+
+#PACTH /todos/:id/done
+
+ Esta rota Deleta a TODO 
+ determinada pelo params.id da requisição
+
+#DELETE /todos/:id
 
 #FIM
+
 ##Contatos
+
 *[EMAIL](felipe@gazapina.com.br)
 
 
