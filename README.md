@@ -24,7 +24,7 @@ Tudo isso para cada usuário específico (o username será passado pelo Header)
 
 ### Comandos
 
-###POST /
+### POST /
 * BODY
     { 
       id: 'uuid', // precisa ser um uuid
@@ -36,10 +36,10 @@ Criará um usuário
 
 ### Todas as próximas requisições necessitam do username para ter sucesso nas mesmas
 
-###GET /todos
+### GET /todos
 * Esta rota deve receber um header com a propriedade username contendo o username do usuário criado anteriormente
 
-###POST /todos
+### POST /todos
 * BODY
     { 
       title: 'Nome da tarefa',
@@ -59,7 +59,7 @@ Será criada uma TODO da seguinte forma:
 * Esta roda recebe no body os dados a serem atualizados
 
 
-###PUT /todos/:id
+### PUT /todos/:id
 * BODY
     { 
       title: 'Nome da tarefa',
@@ -70,16 +70,16 @@ Será criada uma TODO da seguinte forma:
  determinada pelo params.id da requisição
 
 
-###PACTH /todos/:id/done
+### PACTH /todos/:id/done
 
  Esta rota Deleta a TODO 
  determinada pelo params.id da requisição
 
-###DELETE /todos/:id
+### DELETE /todos/:id
 
-###FIM
+### FIM
 
-###Contatos
+### Contatos
 
 *[EMAIL](felipe@gazapina.com.br)
 
