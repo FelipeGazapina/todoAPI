@@ -81,6 +81,7 @@ Será criada uma TODO da seguinte forma:
 
 ### Contatos
 
-*[EMAIL](felipe@gazapina.com.br)
+* [EMAIL](felipe@gazapina.com.br)
+* [NÚMERO](https://wa.link/gwodu2)
 
 
