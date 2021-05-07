@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 
-const { v4:uuidV4 } = require('uuid')
+const { v4:uuidV4, validate: uuidValidate } = require('uuid')
 const app = express()
 
 app.use(express.json())
@@ -11,23 +11,70 @@ app.use(express.json())
  * Confere se o usuario existe
  * retorna o header (username) do usuario
  */
- function checkExistsUserAccount(req, res, next){
-    const { username } = req.headers
+ function checkExistsUserAccount(require, response, next){
+    const { username } = require.headers
     const user = users.find(user => user.username === username)
     
-    !user ? res.status(404).json({error: "User not found"}): ''
+    !user ? response.status(404).json({error: "User not found"}): ''
 
-    req.user = user
+    require.user = user
     return next()
 }
-function checkExistTodo(req,res,next){
-    const {user} = req
+/**
+ * Middleware
+ * Confere se o TODO existe
+ * se existe continua com as funcoes | retorna um erro 404
+ */
+function checkExistTodo(require,response,next){
+    const {user} = require;
+    const {id} = require.params;
+    // console.log(id)
 
-    const todoExist = user.todo.some(todo => todo.id === id)
-    !todoExist? res.status(404).json({error: 'Todo doesn`t exist!'}) : ''
+
+    (uuidValidate(id)) ? "": response.status(400).json({error:"ID informado incorreto"})
+
+    const todo = user.todo.find(todo => todo.id === id)
+    !todo? response.status(404).json({error: 'Todo doesn`t exist!'}) : ''
+
+    require.todo = todo
+    return next()
+}
+/**
+ * Middleware
+ * Encontra o usuario por id passado pelos parametros
+ */
+function findUserById(require,response,next){
+    const { id } = require.params;
+
+    (uuidValidate(id)) ? "": response.status(400).json({error:"ID informado incorreto"})
+
+    const user = users.find(user => user.id === id)
+    
+    !user ? response.status(404).json({error: "User not found"}): ''
+
+    require.user = user
 
     return next()
 }
+/**
+ * Middleware
+ * Deve receber o usuario ja dentro do require(depois do checkExistsUserAccount)
+ * e chamar a funcao next apenas se esse usuario estiver no plano gratis e ainda n possuir
+ * 10 TODOS cadastradas ou se ele ja estiver no plano Pro 
+ */
+function checksCreateTodosUserAvailability(require,response,next){
+    const { user } = require;
+    // console.log(user.todo.length)
+    /** confere se status do usuario esta true */
+    (user.pro)? next() : 
+    
+    /** confere se no plano gratis o usuario ja tem 10 TODO */
+    (user.todo.length >= 10) ? 
+        response.status(403).json({message:"Already use all TODOS available (10)"}) : 
+        next()
+
+}
+
 
 /**
  * user deve conter ->
@@ -41,7 +88,10 @@ function checkExistTodo(req,res,next){
  *  ]
  */
 const users = []
-
+app.get('/users/:id', findUserById,(require,response)=>{
+    const {user} = require
+    response.status(200).json({user})
+})
 app.route('/users')
     .post((require,response)=>{
         const {username} = require.headers
@@ -58,6 +108,7 @@ app.route('/users')
             id: uuidV4(),
             name: name,
             username: username,
+            pro: false,
             todo: []
         })
         console.log(users)
@@ -69,9 +120,6 @@ app.route('/users')
  * app.use serao verificadas pelo middleware
  */
  app.use(checkExistsUserAccount)
-/**
- * Criando porta e escutando todas as requisicoes feitas para a mesma
- */
 
 app.route('/todo').get((require,response)=>{
     const { user } = require
@@ -89,7 +137,7 @@ app.route('/todo').get((require,response)=>{
  * created_at: new Date()
  * status: boolean (false = not done | true = done)
  */
-    .post((require,response)=>{
+app.post('/todo',checkExistsUserAccount,checksCreateTodosUserAvailability,(require,response)=>{
         const {user} = require
         const {title, deadline} = require.body
 
@@ -109,7 +157,7 @@ app.route('/todo').get((require,response)=>{
  * Todas as requisicoes feitas posteriormente a este
  * app.use serao verificadas pelo middleware
  */
- app.use(checkExistTodo)
+ app.use("/todo/:id",checkExistTodo)
 /**
  * Recebe: 
  * title: string
@@ -117,14 +165,11 @@ app.route('/todo').get((require,response)=>{
  * Para fazer a atualizacao dos dados, somente da todo com id deste usuario
  */
 app.route("/todo/:id").put((require,response)=>{
-    const {user} = require
-    const {id} = require.params
+    const {todo} = require
     const {title, deadline} = require.body
 
-    const todoForUpdate = user.todo.find(todo => todo.id === id)
-
-    todoForUpdate.title = title
-    todoForUpdate.deadline = new Date(deadline)
+    todo.title = title
+    todo.deadline = new Date(deadline)
 
     return response.status(200).json({message: "Data Upgraded successfully"})
 })
@@ -142,19 +187,20 @@ app.route("/todo/:id").put((require,response)=>{
             todo: user.todo
         })
     })
+
+app.use("/todo/:id/done",checkExistTodo)
 /**
  * faz a atualizacao dos dados, somente da todo com id deste usuario
  */
 app.patch("/todo/:id/done",(require,response)=>{
-    const {user} = require
-    const {id} = require.params
-
-    const todoForUpdate = user.todo.find(todo => todo.id === id)
-
-    todoForUpdate.status = true
+    const {todo} = require
+    todo.status = true
 
     return response.status(200).json({message: "Data Upgraded successfully"})
 })
+/**
+ * Criando porta e escutando todas as requisicoes feitas para a mesma
+ */
 const port = 3000
 app.listen(port)
 
