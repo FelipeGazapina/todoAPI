@@ -28,7 +28,10 @@ ________________________________________________________________________________
 
 ### Comandos
 
-### POST /
+### GET /users/:id
+* Faz a procura de um usuário atravéz da passagem de um id via GET
+
+### POST /users
 * BODY
     { 
       id: 'uuid', // precisa ser um uuid
