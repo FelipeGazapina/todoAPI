@@ -42,7 +42,7 @@ function checkExistTodo(req,res,next){
  */
 const users = []
 
-app.route('/Users')
+app.route('/users')
     .post((require,response)=>{
         const {username} = require.headers
         const {name} = require.body
