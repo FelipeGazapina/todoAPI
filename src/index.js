@@ -168,8 +168,8 @@ app.route("/todo/:id").put((require,response)=>{
     const {todo} = require
     const {title, deadline} = require.body
 
-    todo.title = title
-    todo.deadline = new Date(deadline)
+    if(title) todo.title = title
+    if(deadline) todo.deadline = new Date(deadline)
 
     return response.status(200).json({message: "Data Upgraded successfully"})
 })
