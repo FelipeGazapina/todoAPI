@@ -92,10 +92,10 @@ app.get('/users/:id', findUserById,(require,response)=>{
     const {user} = require
     response.status(200).json({user})
 })
-app.route('/users')
+app.route('/Users')
     .post((require,response)=>{
-        const {username} = require.headers
-        const {name} = require.body
+        // const {username} = require.headers
+        const {name, username} = require.body
 
         /**
          * Testa para ver se o usuario ja existe
