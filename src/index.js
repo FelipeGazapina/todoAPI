@@ -92,7 +92,7 @@ app.get('/users/:id', findUserById,(require,response)=>{
     const {user} = require
     response.status(200).json({user})
 })
-app.route('/Users')
+app.route('/users')
     .post((require,response)=>{
         // const {username} = require.headers
         const {name, username} = require.body
@@ -111,8 +111,8 @@ app.route('/Users')
             pro: false,
             todo: []
         })
-        console.log(users)
-        return response.status(201).json({message: "User created successfully"})
+        const user = users.find(user => user.username === username)
+        return response.status(201).json(user)
     })
 
 /**
