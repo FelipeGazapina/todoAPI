@@ -109,7 +109,7 @@ app.route('/users')
             name: name,
             username: username,
             pro: false,
-            todo: []
+            todos: []
         })
         const user = users.find(user => user.username === username)
         return response.status(201).json(user)
