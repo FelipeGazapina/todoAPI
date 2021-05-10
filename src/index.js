@@ -104,14 +104,13 @@ app.route('/users')
 
         userAlreadyExist ? response.status(400).json({error: 'User already exist!'}) : ''
 
-        users.push({
+        const user = users.push({
             id: uuidV4(),
             name: name,
             username: username,
             pro: false,
             todos: []
         })
-        const user = users.find(user => user.username === username)
         return response.status(201).json(user)
     })
 
