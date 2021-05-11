@@ -1,7 +1,7 @@
 const request = require('supertest');
-const { validate } = require('uuid');
+const { validate, v4 } = require('uuid');
 
-const app = require('../');
+const { app } = require('../');
 
 describe('Todos', () => {
   it("should be able to list all user's todo", async () => {
@@ -55,7 +55,7 @@ describe('Todos', () => {
     expect(response.body).toMatchObject({
       title: 'test todo',
       deadline: todoDate.toISOString(),
-      status: false
+      done: false
     });
     expect(validate(response.body.id)).toBe(true);
     expect(response.body.created_at).toBeTruthy();
@@ -90,7 +90,7 @@ describe('Todos', () => {
     expect(response.body).toMatchObject({
       title: 'update title',
       deadline: todoDate.toISOString(),
-      status: false
+      done: false
     });
   });
 
@@ -105,7 +105,7 @@ describe('Todos', () => {
     const todoDate = new Date();
 
     const response = await request(app)
-      .put('/todos/invalid-todo-id')
+      .put(`/todos/${v4()}`)
       .send({
         title: 'update title',
         deadline: todoDate
@@ -116,7 +116,7 @@ describe('Todos', () => {
     expect(response.body.error).toBeTruthy();
   });
 
-  it('should be able to mark a todo as status', async () => {
+  it('should be able to mark a todo as done', async () => {
     const userResponse = await request(app)
       .post('/users')
       .send({
@@ -135,16 +135,16 @@ describe('Todos', () => {
       .set('username', userResponse.body.username);
 
     const response = await request(app)
-      .patch(`/todos/${todoResponse.body.id}/status`)
+      .patch(`/todos/${todoResponse.body.id}/done`)
       .set('username', userResponse.body.username);
 
     expect(response.body).toMatchObject({
       ...todoResponse.body,
-      status: true
+      done: true
     });
   });
 
-  it('should not be able to mark a non existing todo as status', async () => {
+  it('should not be able to mark a non existing todo as done', async () => {
     const userResponse = await request(app)
       .post('/users')
       .send({
@@ -153,7 +153,7 @@ describe('Todos', () => {
       });
 
     const response = await request(app)
-      .patch('/todos/invalid-todo-id/status')
+      .patch(`/todos/${v4()}/done`)
       .set('username', userResponse.body.username)
       .expect(404);
 
@@ -199,7 +199,7 @@ describe('Todos', () => {
       });
 
     const response = await request(app)
-      .delete('/todos/invalid-todo-id')
+      .delete(`/todos/${v4()}`)
       .set('username', userResponse.body.username)
       .expect(404);
 
